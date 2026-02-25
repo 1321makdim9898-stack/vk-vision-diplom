@@ -49,3 +49,7 @@ desktop.ini
 **/logs/**
 **/*.zip
 desktop.ini
+
+# ML weights (do not store in git)
+models/
+**/*.pth
