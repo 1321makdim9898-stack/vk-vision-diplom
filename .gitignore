@@ -43,3 +43,9 @@ desktop.ini
 
 # Optionally: keep history.json? (если хочешь хранить пример истории)
 # !**/uploads/history.json
+
+# Product runtime
+**/uploads/**
+**/logs/**
+**/*.zip
+desktop.ini
