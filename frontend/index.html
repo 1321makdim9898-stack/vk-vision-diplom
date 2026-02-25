@@ -1,0 +1,189 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>VK Vision — Prototype</title>
+  <style>
+    :root{
+      --bg:#0b1020;
+      --card:#111a33;
+      --card2:#0f1730;
+      --text:#e8ecff;
+      --muted:#b8c0ff;
+      --accent:#7aa2ff;
+      --good:#5fe1b3;
+      --warn:#ffcc66;
+      --bad:#ff6b6b;
+      --border: rgba(255,255,255,.08);
+    }
+    html,body{height:100%; margin:0; font-family: ui-sans-serif, system-ui, Segoe UI, Roboto, Arial;}
+    body{background: radial-gradient(1200px 800px at 20% 10%, rgba(122,162,255,.25), transparent 60%),
+                 radial-gradient(900px 600px at 80% 20%, rgba(95,225,179,.18), transparent 55%),
+                 var(--bg);
+         color:var(--text);
+    }
+    .wrap{max-width:1100px; margin:0 auto; padding:24px;}
+    h1{margin:0 0 8px; font-size:28px;}
+    .sub{color:var(--muted); margin-bottom:18px;}
+    .grid{display:grid; grid-template-columns: 1.1fr .9fr; gap:16px;}
+    .panel{background: linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
+           border:1px solid var(--border);
+           border-radius:18px; padding:16px; box-shadow: 0 10px 30px rgba(0,0,0,.25);}
+    .row{display:flex; gap:12px; flex-wrap:wrap; align-items:center;}
+    .btn{background:rgba(122,162,255,.18); color:var(--text); border:1px solid var(--border);
+         padding:10px 12px; border-radius:12px; cursor:pointer;}
+    .btn:hover{border-color: rgba(122,162,255,.35);}
+    input[type=file]{color:var(--muted);}
+    .history{display:flex; flex-direction:column; gap:10px; margin-top:10px;}
+    .hitem{display:flex; gap:12px; align-items:center; background:var(--card2);
+           border:1px solid var(--border); border-radius:14px; padding:10px; cursor:pointer;}
+    .thumb{width:74px; height:74px; border-radius:12px; object-fit:cover; border:1px solid var(--border);}
+    .meta{display:flex; flex-direction:column; gap:4px;}
+    .meta .t{font-size:13px; color:var(--muted);}
+    .meta .s{font-size:14px;}
+    .cards{display:flex; flex-direction:column; gap:12px;}
+    .facecard{background:var(--card); border:1px solid var(--border); border-radius:16px; padding:14px;}
+    .facehead{display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;}
+    .pill{font-size:12px; padding:5px 10px; border-radius:999px; border:1px solid var(--border); color:var(--muted);}
+    .kv{display:grid; grid-template-columns: 160px 1fr; gap:8px; margin-top:8px;}
+    .k{color:var(--muted);}
+    .au{display:flex; flex-wrap:wrap; gap:8px; margin-top:10px;}
+    .autag{font-size:12px; padding:6px 8px; border:1px solid var(--border); border-radius:12px; background:rgba(255,255,255,.03);}
+    .empty{color:var(--muted); font-size:14px;}
+    @media (max-width: 900px){
+      .grid{grid-template-columns: 1fr;}
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>VK Vision — прототип продукта</h1>
+    <div class="sub">Загрузка фото → анализ лиц (эмоции, возраст/пол, мимика) → история проверок.</div>
+
+    <div class="grid">
+      <div class="panel">
+        <div class="row">
+          <input id="file" type="file" accept="image/*"/>
+          <button class="btn" id="analyze">Анализ</button>
+          <button class="btn" id="refresh">Обновить историю</button>
+        </div>
+        <div style="height:10px"></div>
+        <div id="result" class="cards">
+          <div class="empty">Загрузите изображение и нажмите «Анализ».</div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="row" style="justify-content:space-between;">
+          <div><b>История</b></div>
+          <div class="pill" id="hcount">0</div>
+        </div>
+        <div class="history" id="history"></div>
+      </div>
+    </div>
+  </div>
+
+<script>
+const API = "http://127.0.0.1:8000";
+
+function fmtTs(iso){
+  try{
+    const d = new Date(iso);
+    return d.toLocaleString();
+  }catch(e){ return iso; }
+}
+
+function faceCard(face){
+  const emo = face.emotion || {};
+  const ag = face.age_gender || {};
+  const aus = (face.aus && face.aus.top) ? face.aus.top : [];
+  const top3 = emo.top3 || [];
+  const top3txt = top3.map(x => `${x.label} (${(x.prob*100).toFixed(1)}%)`).join(", ");
+  const auTags = aus.map(a => `<span class="autag"><b>${a.au}</b> ${a.name}: ${(a.value*100).toFixed(0)}%</span>`).join("");
+  return `
+    <div class="facecard">
+      <div class="facehead">
+        <div><b>Лицо #${face.id}</b></div>
+        <div class="pill">score: ${(face.bbox?.score ?? 0).toFixed(2)}</div>
+      </div>
+      <div class="kv">
+        <div class="k">Эмоция</div><div>${emo.label ?? "—"} <span class="pill">${emo.source ?? ""}</span></div>
+        <div class="k">Top-3</div><div>${top3txt || "—"}</div>
+        <div class="k">Пол</div><div>${ag.gender ?? "—"} <span class="pill">${ag.source ?? ""}</span></div>
+        <div class="k">Возраст</div><div>${ag.age_range ?? "—"}</div>
+      </div>
+      <div style="height:8px"></div>
+      <div class="k">Мимика (AUs)</div>
+      <div class="au">${auTags || '<span class="empty">Нет данных</span>'}</div>
+    </div>
+  `;
+}
+
+function renderResult(data){
+  const el = document.getElementById("result");
+  if(!data || !data.result){
+    el.innerHTML = `<div class="empty">Нет результата.</div>`;
+    return;
+  }
+  const r = data.result;
+  const faces = r.faces || [];
+  if(faces.length === 0){
+    el.innerHTML = `<div class="facecard"><b>Лица не обнаружены.</b><div class="empty">Попробуйте другое фото.</div></div>`;
+    return;
+  }
+  el.innerHTML = faces.map(faceCard).join("");
+}
+
+async function analyze(){
+  const f = document.getElementById("file").files[0];
+  if(!f){ alert("Выберите фото"); return; }
+  const fd = new FormData();
+  fd.append("file", f);
+  const res = await fetch(`${API}/analyze?source=upload`, {method:"POST", body: fd});
+  if(!res.ok){
+    const t = await res.text();
+    alert("Ошибка анализа: " + t);
+    return;
+  }
+  const data = await res.json();
+  renderResult(data);
+  await loadHistory();
+}
+
+async function loadHistory(){
+  const res = await fetch(`${API}/history?limit=25`);
+  const data = await res.json();
+  const items = data.items || [];
+  document.getElementById("hcount").textContent = items.length.toString();
+  const list = document.getElementById("history");
+  list.innerHTML = "";
+  for(const it of items){
+    const thumbUrl = `${API}/history/${it.id}/thumb`;
+    const div = document.createElement("div");
+    div.className = "hitem";
+    div.innerHTML = `
+      <img class="thumb" src="${thumbUrl}" />
+      <div class="meta">
+        <div class="t">${fmtTs(it.created_at)} • ${it.source}${it.source_ref ? " • "+it.source_ref : ""}</div>
+        <div class="s">Открыть результат</div>
+      </div>
+    `;
+    div.onclick = async () => {
+      const r = await fetch(`${API}/history/${it.id}`);
+      const jd = await r.json();
+      renderResult({result: jd.result});
+    };
+    list.appendChild(div);
+  }
+  if(items.length===0){
+    list.innerHTML = `<div class="empty">Пока нет проверок.</div>`;
+  }
+}
+
+document.getElementById("analyze").onclick = analyze;
+document.getElementById("refresh").onclick = loadHistory;
+loadHistory();
+</script>
+</body>
+</html>

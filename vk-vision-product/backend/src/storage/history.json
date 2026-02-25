@@ -1,0 +1,1057 @@
+[
+  {
+    "id": "cc16e220a8eee951e79a",
+    "createdAt": "2025-12-23T08:23:28.232Z",
+    "image": {
+      "filename": "1766478207476_a5b43ffd2a654d9c036a.webp",
+      "originalname": "OIP (3).webp",
+      "mimetype": "image/webp",
+      "size": 7680,
+      "url": "http://127.0.0.1:3001/uploads/1766478207476_a5b43ffd2a654d9c036a.webp"
+    },
+    "result": {
+      "ok": true,
+      "version": "0.3.3",
+      "time_ms": 1766478208229,
+      "faces_count": 1,
+      "faces": [
+        {
+          "bbox": [
+            121,
+            88,
+            229,
+            229
+          ],
+          "score": 0.866127610206604,
+          "emotion": {
+            "label": "angry",
+            "prob": 0.9397383332252502,
+            "probs": {
+              "angry": 0.9397383332252502,
+              "disgust": 4.5710558538303303e-7,
+              "fear": 0.0009039636352099478,
+              "happy": 0.0003101779439020902,
+              "neutral": 0.03591793030500412,
+              "sad": 0.02312854304909706,
+              "surprise": 5.84725000862818e-7
+            }
+          },
+          "age_gender": {
+            "age_bin": "41-60",
+            "age_bin_prob": 0.5553203474264592,
+            "age_est": 53.54589324894647,
+            "gender": "male",
+            "gender_prob": 0.9988188147544861,
+            "mode": "dldl"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "a35a4849a1823833249d",
+    "createdAt": "2025-12-22T19:09:56.849Z",
+    "image": {
+      "filename": "1766430596751_83ad97463d027ba61177.webp",
+      "originalname": "OIP (2).webp",
+      "mimetype": "image/webp",
+      "size": 30326,
+      "url": "http://127.0.0.1:3001/uploads/1766430596751_83ad97463d027ba61177.webp"
+    },
+    "result": {
+      "ok": true,
+      "version": "0.3.3",
+      "time_ms": 1766430596849,
+      "faces_count": 1,
+      "faces": [
+        {
+          "bbox": [
+            129,
+            218,
+            198,
+            198
+          ],
+          "score": 0.9609116911888123,
+          "emotion": {
+            "label": "happy",
+            "prob": 0.9643068909645081,
+            "probs": {
+              "angry": 0.000025949040718842298,
+              "disgust": 1.4506188961149746e-7,
+              "fear": 0.000003181194415446953,
+              "happy": 0.9643068909645081,
+              "neutral": 0.035650718957185745,
+              "sad": 0.0000022907120182935614,
+              "surprise": 0.000010844448297575582
+            }
+          },
+          "age_gender": {
+            "age_bin": "61+",
+            "age_bin_prob": 0.9981874123868693,
+            "age_est": 96.95612420531,
+            "gender": "female",
+            "gender_prob": 0.9978060126304626,
+            "mode": "dldl"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "e6bed155da82057084d2",
+    "createdAt": "2025-12-22T19:07:20.505Z",
+    "image": {
+      "filename": "1766430440408_2e4aeac52228ee322cc6.webp",
+      "originalname": "OIP (1).webp",
+      "mimetype": "image/webp",
+      "size": 8544,
+      "url": "http://127.0.0.1:3001/uploads/1766430440408_2e4aeac52228ee322cc6.webp"
+    },
+    "result": {
+      "ok": true,
+      "version": "0.3.3",
+      "time_ms": 1766430440504,
+      "faces_count": 1,
+      "faces": [
+        {
+          "bbox": [
+            163,
+            103,
+            151,
+            151
+          ],
+          "score": 0.908722996711731,
+          "emotion": {
+            "label": "sad",
+            "prob": 0.9493669271469116,
+            "probs": {
+              "angry": 0.04746304824948311,
+              "disgust": 0.0000070547412178711966,
+              "fear": 0.0024980041198432446,
+              "happy": 8.60970089888724e-7,
+              "neutral": 0.0005605868063867092,
+              "sad": 0.9493669271469116,
+              "surprise": 0.00010354319238103926
+            }
+          },
+          "age_gender": {
+            "age_bin": "26-40",
+            "age_bin_prob": 0.34907391760498285,
+            "age_est": 39.70070946597889,
+            "gender": "male",
+            "gender_prob": 0.9999998807907104,
+            "mode": "dldl"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "4b3b27d6440e8708c474",
+    "createdAt": "2025-12-22T19:06:39.623Z",
+    "image": {
+      "filename": "1766430399484_ad9de4301f52f9539c1f.webp",
+      "originalname": "OIP.webp",
+      "mimetype": "image/webp",
+      "size": 9048,
+      "url": "http://127.0.0.1:3001/uploads/1766430399484_ad9de4301f52f9539c1f.webp"
+    },
+    "result": {
+      "ok": true,
+      "version": "0.3.3",
+      "time_ms": 1766430399622,
+      "faces_count": 1,
+      "faces": [
+        {
+          "bbox": [
+            209,
+            68,
+            66,
+            66
+          ],
+          "score": 0.9430270195007324,
+          "emotion": {
+            "label": "happy",
+            "prob": 0.9998373985290527,
+            "probs": {
+              "angry": 0.0000020122440673731035,
+              "disgust": 2.5479766918579116e-7,
+              "fear": 9.947583521352499e-7,
+              "happy": 0.9998373985290527,
+              "neutral": 0.00004649879701901227,
+              "sad": 0.00006030322765582241,
+              "surprise": 0.00005251851325738244
+            }
+          },
+          "age_gender": {
+            "age_bin": "26-40",
+            "age_bin_prob": 0.9731860430911183,
+            "age_est": 32.60610664310878,
+            "gender": "male",
+            "gender_prob": 0.9999903440475464,
+            "mode": "dldl"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "2f8785779b2bfeac4e8a",
+    "createdAt": "2025-12-22T19:04:05.220Z",
+    "image": {
+      "filename": "1766430245104_934757f0812dea8d9a7b.jpg",
+      "originalname": "03zLBnWfumFk934xIen57CKi3PnZS8n8TjjBlmKnwG6dOHLsFEdUo8HSI8ucX7cy9sHTKrpe9R3u1y06zqglZcaC.jpg",
+      "mimetype": "image/jpeg",
+      "size": 1199623,
+      "url": "http://127.0.0.1:3001/uploads/1766430245104_934757f0812dea8d9a7b.jpg"
+    },
+    "result": {
+      "ok": true,
+      "version": "0.3.3",
+      "time_ms": 1766430245217,
+      "faces_count": 1,
+      "faces": [
+        {
+          "bbox": [
+            765,
+            750,
+            419,
+            419
+          ],
+          "score": 0.8179976344108582,
+          "emotion": {
+            "label": "sad",
+            "prob": 0.5240352153778076,
+            "probs": {
+              "angry": 0.12977813184261322,
+              "disgust": 0.0010265116579830647,
+              "fear": 0.00721959862858057,
+              "happy": 0.23003792762756348,
+              "neutral": 0.0816931501030922,
+              "sad": 0.5240352153778076,
+              "surprise": 0.026209525763988495
+            }
+          },
+          "age_gender": {
+            "age_bin": "41-60",
+            "age_bin_prob": 0.11829184996895492,
+            "age_est": 46.65073995912098,
+            "gender": "male",
+            "gender_prob": 0.9998457431793213,
+            "mode": "dldl"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "5ab511674255a233d4b1",
+    "createdAt": "2025-12-22T19:01:54.364Z",
+    "image": {
+      "filename": "1766430113614_7fd81e0f3b165d078e9f.webp",
+      "originalname": "OIP.webp",
+      "mimetype": "image/webp",
+      "size": 9048,
+      "url": "http://127.0.0.1:3001/uploads/1766430113614_7fd81e0f3b165d078e9f.webp"
+    },
+    "result": {
+      "ok": true,
+      "version": "0.3.3",
+      "time_ms": 1766430114362,
+      "faces_count": 1,
+      "faces": [
+        {
+          "bbox": [
+            209,
+            68,
+            66,
+            66
+          ],
+          "score": 0.9430270195007324,
+          "emotion": {
+            "label": "happy",
+            "prob": 0.9998373985290527,
+            "probs": {
+              "angry": 0.0000020122440673731035,
+              "disgust": 2.5479766918579116e-7,
+              "fear": 9.947583521352499e-7,
+              "happy": 0.9998373985290527,
+              "neutral": 0.00004649879701901227,
+              "sad": 0.00006030322765582241,
+              "surprise": 0.00005251851325738244
+            }
+          },
+          "age_gender": {
+            "age_bin": "26-40",
+            "age_bin_prob": 0.9731860430911183,
+            "age_est": 32.60610664310878,
+            "gender": "male",
+            "gender_prob": 0.9999903440475464,
+            "mode": "dldl"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "646d212e8ba470605ebe",
+    "createdAt": "2025-12-18T12:39:14.514Z",
+    "image": {
+      "filename": "1766061554201_d6c6efa300362285a8ae.jpg",
+      "originalname": "7VWcHkBrnLg.jpg",
+      "mimetype": "image/jpeg",
+      "size": 225870,
+      "url": "http://127.0.0.1:3001/uploads/1766061554201_d6c6efa300362285a8ae.jpg"
+    },
+    "result": {
+      "ok": true,
+      "version": "0.3.3",
+      "time_ms": 1766061554511,
+      "faces_count": 1,
+      "faces": [
+        {
+          "bbox": [
+            228,
+            370,
+            671,
+            671
+          ],
+          "score": 0.9816024899482727,
+          "emotion": {
+            "label": "neutral",
+            "prob": 0.9592167735099792,
+            "probs": {
+              "angry": 0.037158455699682236,
+              "disgust": 0.00006593096622964367,
+              "fear": 0.00009885693725664169,
+              "happy": 0.00002961573045467958,
+              "neutral": 0.9592167735099792,
+              "sad": 0.003343483665958047,
+              "surprise": 0.00008687804074725136
+            }
+          },
+          "age_gender": {
+            "age_bin": "13-25",
+            "age_bin_prob": 0.8869390282779932,
+            "age_est": 16.741019720099448,
+            "gender": "male",
+            "gender_prob": 1,
+            "mode": "dldl"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "bb5fd4b78ed557b9ca8e",
+    "createdAt": "2025-12-18T01:52:34.767Z",
+    "image": {
+      "filename": "1766022754748_4a0e10b7ca71f220ce08.webp",
+      "originalname": "OIP.webp",
+      "mimetype": "image/webp",
+      "size": 9048,
+      "url": "http://127.0.0.1:3001/uploads/1766022754748_4a0e10b7ca71f220ce08.webp"
+    },
+    "result": {
+      "ok": true,
+      "version": "0.3.3",
+      "time_ms": 1766022754767,
+      "faces_count": 1,
+      "faces": [
+        {
+          "bbox": [
+            209,
+            68,
+            66,
+            66
+          ],
+          "score": 0.9430270195007324,
+          "emotion": {
+            "label": "happy",
+            "prob": 0.9998373985290527,
+            "probs": {
+              "angry": 0.0000020122440673731035,
+              "disgust": 2.5479766918579116e-7,
+              "fear": 9.947583521352499e-7,
+              "happy": 0.9998373985290527,
+              "neutral": 0.00004649879701901227,
+              "sad": 0.00006030322765582241,
+              "surprise": 0.00005251851325738244
+            }
+          },
+          "age_gender": {
+            "age_bin": "26-40",
+            "age_bin_prob": 1,
+            "age_est": 29.903942942619324,
+            "gender": "male",
+            "gender_prob": 0.9998897314071655,
+            "mode": "regression"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "1c9104ebb59000d5ba5f",
+    "createdAt": "2025-12-18T01:52:28.930Z",
+    "image": {
+      "filename": "1766022748874_485bf89c4cb0d513cbbc.webp",
+      "originalname": "orig.webp",
+      "mimetype": "image/webp",
+      "size": 33354,
+      "url": "http://127.0.0.1:3001/uploads/1766022748874_485bf89c4cb0d513cbbc.webp"
+    },
+    "result": {
+      "ok": true,
+      "version": "0.3.3",
+      "time_ms": 1766022748928,
+      "faces_count": 0,
+      "faces": []
+    }
+  },
+  {
+    "id": "f03bee60740340d330d1",
+    "createdAt": "2025-12-18T01:52:17.471Z",
+    "image": {
+      "filename": "1766022737105_e5ae41ab32d856d5ffd3.jpg",
+      "originalname": "0A0A0091.jpg",
+      "mimetype": "image/jpeg",
+      "size": 8155618,
+      "url": "http://127.0.0.1:3001/uploads/1766022737105_e5ae41ab32d856d5ffd3.jpg"
+    },
+    "result": {
+      "ok": true,
+      "version": "0.3.3",
+      "time_ms": 1766022737463,
+      "faces_count": 2,
+      "faces": [
+        {
+          "bbox": [
+            3101,
+            733,
+            731,
+            731
+          ],
+          "score": 0.8206362128257751,
+          "emotion": {
+            "label": "happy",
+            "prob": 0.5402954816818237,
+            "probs": {
+              "angry": 0.08194320648908615,
+              "disgust": 0.0003103208728134632,
+              "fear": 0.25916337966918945,
+              "happy": 0.5402954816818237,
+              "neutral": 0.1054263710975647,
+              "sad": 0.012499947100877762,
+              "surprise": 0.0003613317967392504
+            }
+          },
+          "age_gender": {
+            "age_bin": "41-60",
+            "age_bin_prob": 1,
+            "age_est": 47.28726625442505,
+            "gender": "male",
+            "gender_prob": 0.9999802112579346,
+            "mode": "regression"
+          }
+        },
+        {
+          "bbox": [
+            1530,
+            1054,
+            695,
+            695
+          ],
+          "score": 0.6459062695503235,
+          "emotion": {
+            "label": "neutral",
+            "prob": 0.9397931694984436,
+            "probs": {
+              "angry": 0.000012961014363099821,
+              "disgust": 0.00003269230728619732,
+              "fear": 0.000009204435627907515,
+              "happy": 0.042781803756952286,
+              "neutral": 0.9397931694984436,
+              "sad": 0.01695428602397442,
+              "surprise": 0.0004158467927481979
+            }
+          },
+          "age_gender": {
+            "age_bin": "61+",
+            "age_bin_prob": 1,
+            "age_est": 25.223429203033447,
+            "gender": "male",
+            "gender_prob": 0.9999994039535522,
+            "mode": "regression"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "20c3af82ae423d35995d",
+    "createdAt": "2025-12-18T01:51:58.028Z",
+    "image": {
+      "filename": "1766022717988_d550faa453ca6266be89.jpg",
+      "originalname": "7VWcHkBrnLg.jpg",
+      "mimetype": "image/jpeg",
+      "size": 225870,
+      "url": "http://127.0.0.1:3001/uploads/1766022717988_d550faa453ca6266be89.jpg"
+    },
+    "result": {
+      "ok": true,
+      "version": "0.3.3",
+      "time_ms": 1766022718026,
+      "faces_count": 1,
+      "faces": [
+        {
+          "bbox": [
+            228,
+            370,
+            671,
+            671
+          ],
+          "score": 0.9816024899482727,
+          "emotion": {
+            "label": "neutral",
+            "prob": 0.9592167735099792,
+            "probs": {
+              "angry": 0.037158455699682236,
+              "disgust": 0.00006593096622964367,
+              "fear": 0.00009885693725664169,
+              "happy": 0.00002961573045467958,
+              "neutral": 0.9592167735099792,
+              "sad": 0.003343483665958047,
+              "surprise": 0.00008687804074725136
+            }
+          },
+          "age_gender": {
+            "age_bin": "13-25",
+            "age_bin_prob": 1,
+            "age_est": 14.552780985832214,
+            "gender": "male",
+            "gender_prob": 0.9999998807907104,
+            "mode": "regression"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "5fc17e9390c9a8ff9a91",
+    "createdAt": "2025-12-17T19:30:07.513Z",
+    "image": {
+      "filename": "1765999807288_c73e4993f5701a76e48f.jpg",
+      "originalname": "7VWcHkBrnLg.jpg",
+      "mimetype": "image/jpeg",
+      "size": 225870,
+      "url": "http://127.0.0.1:3001/uploads/1765999807288_c73e4993f5701a76e48f.jpg"
+    },
+    "result": {
+      "ok": true,
+      "version": "0.3.3",
+      "time_ms": 1765999807511,
+      "faces_count": 1,
+      "faces": [
+        {
+          "bbox": [
+            228,
+            370,
+            671,
+            671
+          ],
+          "score": 0.9816024899482727,
+          "emotion": {
+            "label": "neutral",
+            "prob": 0.9592167735099792,
+            "probs": {
+              "angry": 0.037158455699682236,
+              "disgust": 0.00006593096622964367,
+              "fear": 0.00009885693725664169,
+              "happy": 0.00002961573045467958,
+              "neutral": 0.9592167735099792,
+              "sad": 0.003343483665958047,
+              "surprise": 0.00008687804074725136
+            }
+          },
+          "age_gender": {
+            "age_bin": "13-25",
+            "age_bin_prob": 1,
+            "age_est": 14.552780985832214,
+            "gender": "male",
+            "gender_prob": 0.9999998807907104,
+            "mode": "regression"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "2c731c6b06dc6695ae8d",
+    "createdAt": "2025-12-17T19:20:04.147Z",
+    "image": {
+      "filename": "1765999203919_1610c47de7dbb8b801d7.jpg",
+      "originalname": "7VWcHkBrnLg.jpg",
+      "mimetype": "image/jpeg",
+      "size": 225870,
+      "url": "http://127.0.0.1:3001/uploads/1765999203919_1610c47de7dbb8b801d7.jpg"
+    },
+    "result": {
+      "ok": true,
+      "service": "VK Vision ML Service",
+      "version": "0.3.2",
+      "time_ms": 1765999204145,
+      "faces_count": 1,
+      "faces": [
+        {
+          "bbox": [
+            228,
+            370,
+            671,
+            671
+          ],
+          "score": 0.9816024899482727,
+          "emotion": {
+            "label": "neutral",
+            "prob": 0.9592167735099792,
+            "probs": {
+              "angry": 0.037158455699682236,
+              "disgust": 0.00006593096622964367,
+              "fear": 0.00009885693725664169,
+              "happy": 0.00002961573045467958,
+              "neutral": 0.9592167735099792,
+              "sad": 0.003343483665958047,
+              "surprise": 0.00008687804074725136
+            }
+          },
+          "age_gender": {
+            "age_bin": "13-25",
+            "age_bin_prob": 0.9814558029174805,
+            "age_est": 19.259847968758095,
+            "gender": "male",
+            "gender_prob": 1,
+            "mode": "bins"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "7fe209ba5b8d5cc0e624",
+    "createdAt": "2025-12-17T18:25:08.752Z",
+    "image": {
+      "filename": "1765995908573_b3bdc3fb17b3dcc61edb.webp",
+      "originalname": "OIP.webp",
+      "mimetype": "image/webp",
+      "size": 9048,
+      "url": "http://127.0.0.1:3001/uploads/1765995908573_b3bdc3fb17b3dcc61edb.webp"
+    },
+    "result": {
+      "ok": true,
+      "service": "VK Vision ML Service",
+      "version": "0.3.2",
+      "time_ms": 1765995908751,
+      "faces_count": 1,
+      "faces": [
+        {
+          "bbox": [
+            209,
+            68,
+            66,
+            66
+          ],
+          "score": 0.9430270195007324,
+          "emotion": {
+            "label": "happy",
+            "prob": 0.9998371601104736,
+            "probs": {
+              "angry": 0.0000020126867639191914,
+              "disgust": 2.551930435856775e-7,
+              "fear": 9.939416258930578e-7,
+              "happy": 0.9998371601104736,
+              "neutral": 0.000046564364311052486,
+              "sad": 0.00006036373815732077,
+              "surprise": 0.00005269595203571953
+            }
+          },
+          "age_gender": {
+            "age_bin": "26-40",
+            "age_bin_prob": 0.8509772419929504,
+            "age_est": 35.08816060172103,
+            "gender": "male",
+            "gender_prob": 0.7547509074211121,
+            "mode": "bins"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "c0038844cc9688af502d",
+    "createdAt": "2025-12-17T18:24:45.910Z",
+    "image": {
+      "filename": "1765995885820_e89d8dbf03d30386061a.jpg",
+      "originalname": "03zLBnWfumFk934xIen57CKi3PnZS8n8TjjBlmKnwG6dOHLsFEdUo8HSI8ucX7cy9sHTKrpe9R3u1y06zqglZcaC.jpg",
+      "mimetype": "image/jpeg",
+      "size": 1199623,
+      "url": "http://127.0.0.1:3001/uploads/1765995885820_e89d8dbf03d30386061a.jpg"
+    },
+    "result": {
+      "ok": true,
+      "service": "VK Vision ML Service",
+      "version": "0.3.2",
+      "time_ms": 1765995885907,
+      "faces_count": 1,
+      "faces": [
+        {
+          "bbox": [
+            765,
+            750,
+            419,
+            419
+          ],
+          "score": 0.8179976344108582,
+          "emotion": {
+            "label": "sad",
+            "prob": 0.5238505005836487,
+            "probs": {
+              "angry": 0.13003073632717133,
+              "disgust": 0.0010292266961187124,
+              "fear": 0.007232635747641325,
+              "happy": 0.22997555136680603,
+              "neutral": 0.0816749706864357,
+              "sad": 0.5238505005836487,
+              "surprise": 0.026206402108073235
+            }
+          },
+          "age_gender": {
+            "age_bin": "0-12",
+            "age_bin_prob": 0.6130520105361938,
+            "age_est": 17.702393976738676,
+            "gender": "male",
+            "gender_prob": 0.9971344470977783,
+            "mode": "bins"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "bcd1d540d4f7e7e7acb3",
+    "createdAt": "2025-12-17T18:24:13.586Z",
+    "image": {
+      "filename": "1765995853480_c067f5bc29561de25b4f.jpg",
+      "originalname": "7VWcHkBrnLg.jpg",
+      "mimetype": "image/jpeg",
+      "size": 225870,
+      "url": "http://127.0.0.1:3001/uploads/1765995853480_c067f5bc29561de25b4f.jpg"
+    },
+    "result": {
+      "ok": true,
+      "service": "VK Vision ML Service",
+      "version": "0.3.2",
+      "time_ms": 1765995853584,
+      "faces_count": 1,
+      "faces": [
+        {
+          "bbox": [
+            228,
+            370,
+            671,
+            671
+          ],
+          "score": 0.9816024899482727,
+          "emotion": {
+            "label": "neutral",
+            "prob": 0.9590792655944824,
+            "probs": {
+              "angry": 0.03727792575955391,
+              "disgust": 0.00006613157165702432,
+              "fear": 0.00009924618643708527,
+              "happy": 0.00002973696609842591,
+              "neutral": 0.9590792655944824,
+              "sad": 0.003360586706548929,
+              "surprise": 0.00008714993600733578
+            }
+          },
+          "age_gender": {
+            "age_bin": "13-25",
+            "age_bin_prob": 0.98149174451828,
+            "age_est": 19.259343809031634,
+            "gender": "male",
+            "gender_prob": 1,
+            "mode": "bins"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "d8ee18c28c4df0ece54a",
+    "createdAt": "2025-12-17T15:48:44.939Z",
+    "image": {
+      "filename": "1765986524879_744bc58b90c7ea661f79.jpg",
+      "originalname": "7VWcHkBrnLg.jpg",
+      "mimetype": "image/jpeg",
+      "size": 225870,
+      "url": "http://127.0.0.1:3001/uploads/1765986524879_744bc58b90c7ea661f79.jpg"
+    },
+    "result": {
+      "ok": true,
+      "faces_count": 1,
+      "faces": [
+        {
+          "bbox": [
+            228,
+            370,
+            671,
+            671
+          ],
+          "score": 0.9816024899482727,
+          "emotion": {
+            "label": "sad",
+            "prob": 0.4247768521308899,
+            "probs": {
+              "angry": 0.13770709931850433,
+              "disgust": 0.0536436028778553,
+              "fear": 0.18621893227100372,
+              "happy": 0.025828054174780846,
+              "neutral": 0.09521384537220001,
+              "sad": 0.4247768521308899,
+              "surprise": 0.07661154866218567
+            }
+          },
+          "age_gender": {
+            "age_bin": "13-25",
+            "age_bin_prob": 0.98149174451828,
+            "age_est": 19,
+            "gender": "female",
+            "gender_prob": 1
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "3f16ff29b2d6ab98cbc8",
+    "createdAt": "2025-12-17T15:44:22.041Z",
+    "image": {
+      "filename": "1765986261954_fefdf6c8f386b0c5f95d.jpg",
+      "originalname": "03zLBnWfumFk934xIen57CKi3PnZS8n8TjjBlmKnwG6dOHLsFEdUo8HSI8ucX7cy9sHTKrpe9R3u1y06zqglZcaC.jpg",
+      "mimetype": "image/jpeg",
+      "size": 1199623,
+      "url": "http://127.0.0.1:3001/uploads/1765986261954_fefdf6c8f386b0c5f95d.jpg"
+    },
+    "result": {
+      "ok": true,
+      "faces_count": 1,
+      "faces": [
+        {
+          "bbox": [
+            765,
+            750,
+            419,
+            419
+          ],
+          "score": 0.8179976344108582,
+          "emotion": {
+            "label": "sad",
+            "prob": 0.3499468266963959,
+            "probs": {
+              "angry": 0.14950382709503174,
+              "disgust": 0.0637446790933609,
+              "fear": 0.19865873456001282,
+              "happy": 0.0333147831261158,
+              "neutral": 0.12102016061544418,
+              "sad": 0.3499468266963959,
+              "surprise": 0.08381105214357376
+            }
+          },
+          "age_gender": {
+            "age_bin": "0-12",
+            "age_bin_prob": 0.6130520105361938,
+            "age_est": 6,
+            "gender": "female",
+            "gender_prob": 0.9971344470977783
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "760039a6c98398c6af9e",
+    "createdAt": "2025-12-17T15:16:14.131Z",
+    "image": {
+      "filename": "1765984574053_0c42a4b46bfd43ad04d7.jpg",
+      "originalname": "7VWcHkBrnLg.jpg",
+      "mimetype": "image/jpeg",
+      "size": 225870,
+      "url": "http://127.0.0.1:3001/uploads/1765984574053_0c42a4b46bfd43ad04d7.jpg"
+    },
+    "result": {
+      "ok": true,
+      "faces_count": 1,
+      "faces": [
+        {
+          "bbox": [
+            228,
+            370,
+            671,
+            671
+          ],
+          "score": 0.9816024899482727,
+          "emotion": {
+            "label": "sad",
+            "prob": 0.4247768521308899,
+            "probs": {
+              "angry": 0.13770709931850433,
+              "disgust": 0.0536436028778553,
+              "fear": 0.18621893227100372,
+              "happy": 0.025828054174780846,
+              "neutral": 0.09521384537220001,
+              "sad": 0.4247768521308899,
+              "surprise": 0.07661154866218567
+            }
+          },
+          "age_gender": {
+            "age_bin": "13-25",
+            "age_bin_prob": 0.98149174451828,
+            "age_est": 19,
+            "gender": "female",
+            "gender_prob": 1
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "Ca7ClylY2ryj",
+    "createdAt": "2025-12-16T10:42:13.767Z",
+    "image": {
+      "filename": "1765881733508_GuD0U0yJ.webp",
+      "url": "/uploads/1765881733508_GuD0U0yJ.webp"
+    },
+    "result": {
+      "ok": true,
+      "filename": "OIP.webp",
+      "image": {
+        "w": 474,
+        "h": 474
+      },
+      "detector_used": "mediapipe",
+      "warnings": [],
+      "faces": [
+        {
+          "id": 0,
+          "bbox": {
+            "x": 203,
+            "y": 57,
+            "w": 70,
+            "h": 70
+          },
+          "detector": "mediapipe",
+          "detector_confidence": 0.8793389797210693,
+          "emotion": {
+            "status": "ok",
+            "label": "happy",
+            "confidence": 0.9998791217803955,
+            "probs": {
+              "angry": 9.728462657676573e-8,
+              "disgust": 7.284729122147837e-7,
+              "fear": 5.323678351487615e-7,
+              "happy": 0.9998791217803955,
+              "neutral": 0.000001520513819741609,
+              "sad": 2.3650029845612153e-7,
+              "surprise": 0.00011781341163441539
+            }
+          },
+          "ageGender": {
+            "status": "unavailable"
+          }
+        }
+      ],
+      "timing_ms": 254
+    }
+  },
+  {
+    "id": "FbAEu3q-XYCM",
+    "createdAt": "2025-12-16T10:23:54.761Z",
+    "image": {
+      "filename": "1765880634727_8ynOTJAR.avif",
+      "url": "/uploads/1765880634727_8ynOTJAR.avif"
+    },
+    "result": {
+      "ok": false,
+      "error": "UnidentifiedImageError: cannot identify image file <_io.BytesIO object at 0x000001C1585FA200>",
+      "trace": "Traceback (most recent call last):\n  File \"C:\\vk-vision-demo\\vk-vision-product\\ml_service\\app.py\", line 329, in infer\n    img = _pil_open_image(data)\n          ^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\vk-vision-demo\\vk-vision-product\\ml_service\\app.py\", line 59, in _pil_open_image\n    img = Image.open(io.BytesIO(data))\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\vk-vision-demo\\vk-vision-product\\ml_service\\.venv\\Lib\\site-packages\\PIL\\Image.py\", line 3498, in open\n    raise UnidentifiedImageError(msg)\nPIL.UnidentifiedImageError: cannot identify image file <_io.BytesIO object at 0x000001C1585FA200>\n",
+      "timing_ms": 29
+    }
+  },
+  {
+    "id": "J7-2Pmae73c-",
+    "createdAt": "2025-12-16T09:25:29.051Z",
+    "image": {
+      "filename": "1765877128964_hXxWaVjE.webp",
+      "url": "/uploads/1765877128964_hXxWaVjE.webp"
+    },
+    "result": {
+      "faces_count": 0,
+      "faces": [],
+      "note": "age/gender will stay 'n/a' until age_gender_resnet18.pth is trained & its head format confirmed."
+    }
+  },
+  {
+    "id": "VPlyCSOFH50l",
+    "createdAt": "2025-12-16T08:35:33.862Z",
+    "image": {
+      "filename": "1765874133848_9uI6AXOR.webp",
+      "url": "/uploads/1765874133848_9uI6AXOR.webp"
+    },
+    "result": {
+      "status": "partial",
+      "message": "ml_api.py not found or no compatible analyze_* function. UI is ready; connect your inference here.",
+      "faces": [],
+      "modelInfo": {
+        "emotion_model": "C:\\vk-vision-demo\\vk-vision-product\\ml_service\\models/emotion_resnet18.pth",
+        "age_gender_model": "C:\\vk-vision-demo\\vk-vision-product\\ml_service\\models/age_gender_resnet18.pth",
+        "age_gender_ready": false
+      }
+    }
+  },
+  {
+    "id": "W7Q0LEg986mi",
+    "createdAt": "2025-12-16T08:26:57.205Z",
+    "image": {
+      "filename": "1765873617194_ij5Suxaa.jpg",
+      "url": "/uploads/1765873617194_ij5Suxaa.jpg"
+    },
+    "result": {
+      "status": "partial",
+      "message": "ml_api.py not found or no compatible analyze_* function. UI is ready; connect your inference here.",
+      "faces": [],
+      "modelInfo": {
+        "emotion_model": "C:\\vk-vision-demo\\vk-vision-product\\ml_service\\models/emotion_resnet18.pth",
+        "age_gender_model": "C:\\vk-vision-demo\\vk-vision-product\\ml_service\\models/age_gender_resnet18.pth",
+        "age_gender_ready": false
+      }
+    }
+  },
+  {
+    "id": "zvdVTXU2ufgk",
+    "createdAt": "2025-12-16T08:26:44.810Z",
+    "image": {
+      "filename": "1765873604716_CTNwnebd.webp",
+      "url": "/uploads/1765873604716_CTNwnebd.webp"
+    },
+    "result": {
+      "status": "partial",
+      "message": "ml_api.py not found or no compatible analyze_* function. UI is ready; connect your inference here.",
+      "faces": [],
+      "modelInfo": {
+        "emotion_model": "C:\\vk-vision-demo\\vk-vision-product\\ml_service\\models/emotion_resnet18.pth",
+        "age_gender_model": "C:\\vk-vision-demo\\vk-vision-product\\ml_service\\models/age_gender_resnet18.pth",
+        "age_gender_ready": false
+      }
+    }
+  }
+]

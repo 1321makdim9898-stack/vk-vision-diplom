@@ -1,0 +1,45 @@
+# Node
+**/node_modules/
+**/dist/
+**/build/
+**/.vite/
+
+# Python
+**/__pycache__/
+**/*.pyc
+**/venv/
+**/.venv/
+.venv_cuda/
+.venv_cuda/**
+
+# OS/IDE
+Thumbs.db
+.DS_Store
+.vscode/
+.idea/
+
+# Runtime
+**/logs/
+**/uploads/  # если там появятся файлы; пустую папку git всё равно не хранит
+
+# Secrets
+**/.env
+**/.env.*
+
+# Local research data (keep local)
+data/
+results/
+exp_backup/
+models_exp/
+notebooks/
+
+# Archives / Windows junk
+*.zip
+desktop.ini
+
+# Runtime uploads (do not commit)
+**/uploads/
+**/uploads/**
+
+# Optionally: keep history.json? (если хочешь хранить пример истории)
+# !**/uploads/history.json
