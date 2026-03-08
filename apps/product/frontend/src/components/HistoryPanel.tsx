@@ -5,15 +5,28 @@ type Props = {
   items: HistoryRecord[];
   activeId: string | null;
   onRefresh: () => void;
+  onClearUi: () => void;
   onSelect: (rec: HistoryRecord) => void;
 };
 
-export default function HistoryPanel({ items, activeId, onRefresh, onSelect }: Props) {
+export default function HistoryPanel({ items, activeId, onRefresh, onClearUi, onSelect }: Props) {
   return (
     <div className="card">
       <div className="cardTitle row spaceBetween">
         <span>3) История анализов</span>
-        <button className="btn" onClick={onRefresh}>Обновить</button>
+        <div className="row" style={{ gap: 8 }}>
+          <button type="button" className="btn" onClick={onRefresh}>
+            Обновить
+          </button>
+          <button
+            type="button"
+            className="btn"
+            onClick={onClearUi}
+            title="Очистить историю только на странице"
+          >
+            Очистить
+          </button>
+        </div>
       </div>
 
       <div className="cardBody">
@@ -24,6 +37,7 @@ export default function HistoryPanel({ items, activeId, onRefresh, onSelect }: P
             {items.map((it) => (
               <button
                 key={it.id}
+                type="button"
                 className={`historyItem ${activeId === it.id ? 'active' : ''}`}
                 onClick={() => onSelect(it)}
               >

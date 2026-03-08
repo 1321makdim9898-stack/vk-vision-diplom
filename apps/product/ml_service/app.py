@@ -17,7 +17,8 @@ AGE_BIN_LABELS = ["0-12", "13-25", "26-40", "41-60", "61+"]
 
 MAX_AGE_FOR_REG = 120.0
 MAX_AGE_DLDL = 120
-NUM_AGES_DLDL = MAX_AGE_DLDL + 1
+NUM_AGES_DLDL = MAX_AGE_DLDL + 1  # 121
+
 
 def age_to_bin_label(age: float) -> str:
     a = max(0.0, min(float(age), 120.0))
@@ -26,11 +27,12 @@ def age_to_bin_label(age: float) -> str:
             return lab
     return AGE_BIN_LABELS[-1]
 
+
 def age_bin_prob_from_probs(age_probs: List[float], bin_lo: int, bin_hi: int) -> float:
-    # probability mass within [bin_lo..bin_hi]
     lo = max(0, int(bin_lo))
     hi = min(MAX_AGE_DLDL, int(bin_hi))
-    return float(sum(age_probs[lo:hi+1]))
+    return float(sum(age_probs[lo:hi + 1]))
+
 
 def find_models_dir() -> str:
     env = os.getenv("MODELS_DIR")
@@ -54,14 +56,52 @@ def find_models_dir() -> str:
 
 MODELS_DIR = find_models_dir()
 
-EMOTION_WEIGHTS_PATH = os.path.join(MODELS_DIR, "emotion_resnet18.pth")
 
-# priority 1
-AGE_GENDER_DLDL_WEIGHTS_PATH = os.path.join(MODELS_DIR, "age_gender_dldl_resnet50.pth")
-# priority 2
-AGE_GENDER_REG_WEIGHTS_PATH = os.path.join(MODELS_DIR, "age_gender_regression_resnet18.pth")
-# priority 3 (fallback)
-AGE_GENDER_BINS_WEIGHTS_PATH = os.path.join(MODELS_DIR, "age_gender_resnet18.pth")
+def resolve_weights_path(env_key: str, candidates: List[str]) -> str:
+    """
+    1) Если задан env_key и файл существует — используем его.
+    2) Иначе берём первый существующий из candidates в MODELS_DIR.
+    3) Иначе возвращаем путь к первому кандидату (для /health).
+    """
+    env_val = os.getenv(env_key)
+    if env_val and os.path.isfile(env_val):
+        return os.path.abspath(env_val)
+
+    for name in candidates:
+        p = os.path.join(MODELS_DIR, name)
+        if os.path.isfile(p):
+            return os.path.abspath(p)
+
+    return os.path.abspath(os.path.join(MODELS_DIR, candidates[0]))
+
+
+# --- Weights paths (v2 -> legacy) ---
+EMOTION_WEIGHTS_PATH = resolve_weights_path(
+    "EMOTION_WEIGHTS",
+    ["emotion_resnet18.pth"],
+)
+
+AGE_GENDER_DLDL_WEIGHTS_PATH = resolve_weights_path(
+    "AGE_GENDER_DLDL_WEIGHTS",
+    [
+        "age_gender_dldl_resnet50_v2_best.pth",  # ✅ новый
+        "age_gender_dldl_resnet50.pth",          # legacy
+    ],
+)
+
+AGE_GENDER_REG_WEIGHTS_PATH = resolve_weights_path(
+    "AGE_GENDER_REG_WEIGHTS",
+    [
+        "age_gender_regression_resnet18_v2_best.pth",  # ✅ новый
+        "age_gender_regression_resnet18.pth",          # legacy
+    ],
+)
+
+AGE_GENDER_BINS_WEIGHTS_PATH = resolve_weights_path(
+    "AGE_GENDER_BINS_WEIGHTS",
+    ["age_gender_resnet18.pth"],
+)
+
 
 # -------- optional deps --------
 torch_ok = False
@@ -80,6 +120,7 @@ try:
     import torch.nn as _nn
     import torch.nn.functional as _F
     from torchvision import models as _torchvision_models
+
     torch = _torch
     nn = _nn
     F = _F
@@ -112,9 +153,11 @@ emotion_status = LoadStatus(False, "not loaded", EMOTION_WEIGHTS_PATH)
 
 age_gender_dldl_model = None
 age_gender_dldl_status = LoadStatus(False, "not loaded", AGE_GENDER_DLDL_WEIGHTS_PATH)
+age_gender_dldl_is_v2 = False  # чтобы инференс понимал формат gender выхода
 
 age_gender_reg_model = None
 age_gender_reg_status = LoadStatus(False, "not loaded", AGE_GENDER_REG_WEIGHTS_PATH)
+age_gender_reg_is_v2 = False
 
 age_gender_bins_model = None
 age_gender_bins_status = LoadStatus(False, "not loaded", AGE_GENDER_BINS_WEIGHTS_PATH)
@@ -124,6 +167,7 @@ age_gender_bins_status = LoadStatus(False, "not loaded", AGE_GENDER_BINS_WEIGHTS
 _face_detector = None
 face_detector_ok = False
 face_detector_error = None
+
 
 def init_face_detector():
     global _face_detector, face_detector_ok, face_detector_error
@@ -139,8 +183,10 @@ def init_face_detector():
         face_detector_ok = False
         face_detector_error = repr(e)
 
+
 def pil_to_rgb(pil_img: Image.Image) -> Image.Image:
     return pil_img.convert("RGB") if pil_img.mode != "RGB" else pil_img
+
 
 def detect_faces_mediapipe(pil_img: Image.Image) -> List[Dict[str, Any]]:
     if not face_detector_ok or _face_detector is None:
@@ -162,6 +208,7 @@ def detect_faces_mediapipe(pil_img: Image.Image) -> List[Dict[str, Any]]:
         out.append({"bbox": [x, y, w, h], "score": score})
     return out
 
+
 def crop_face(pil_img: Image.Image, bbox: List[int], pad: float = 0.15) -> Image.Image:
     x, y, w, h = bbox
     W, H = pil_img.size
@@ -178,12 +225,14 @@ def crop_face(pil_img: Image.Image, bbox: List[int], pad: float = 0.15) -> Image
 _IMAGENET_MEAN = None
 _IMAGENET_STD = None
 
+
 def get_imagenet_norm_tensors():
     global _IMAGENET_MEAN, _IMAGENET_STD
     if _IMAGENET_MEAN is None or _IMAGENET_STD is None:
         _IMAGENET_MEAN = torch.tensor([0.485, 0.456, 0.406], device=DEVICE).view(1, 3, 1, 1)
         _IMAGENET_STD = torch.tensor([0.229, 0.224, 0.225], device=DEVICE).view(1, 3, 1, 1)
     return _IMAGENET_MEAN, _IMAGENET_STD
+
 
 def preprocess_for_resnet(pil_img: Image.Image):
     if not torch_ok or torch is None:
@@ -197,16 +246,73 @@ def preprocess_for_resnet(pil_img: Image.Image):
     x = (x - mean) / std
     return x
 
+
 def preprocess_for_emotion(pil_img: Image.Image):
     gray3 = pil_img.convert("L").convert("RGB")
     return preprocess_for_resnet(gray3)
 
+
 def safe_load_state_dict(model, sd):
+    """
+    Поддерживает:
+    - чистый state_dict
+    - checkpoint {"model": state_dict, ...}
+    - checkpoint {"state_dict": state_dict, ...}
+    - убирает "module."
+    - ремапит ключи head_age/head_gender <-> age_head/gender_head
+    """
     if sd is None:
         raise ValueError("state_dict is None")
-    if isinstance(sd, dict) and any(k.startswith("module.") for k in sd.keys()):
+
+    # unwrap checkpoint
+    if isinstance(sd, dict):
+        if "model" in sd and isinstance(sd["model"], dict):
+            sd = sd["model"]
+        elif "state_dict" in sd and isinstance(sd["state_dict"], dict):
+            sd = sd["state_dict"]
+
+    if not isinstance(sd, dict):
+        raise ValueError("state_dict is not a dict after unwrap")
+
+    # remove module. prefix
+    if any(isinstance(k, str) and k.startswith("module.") for k in sd.keys()):
         sd = {k.replace("module.", "", 1): v for k, v in sd.items()}
+
+    keys = set(sd.keys())
+    has_age_head = any(k.startswith("age_head.") for k in keys)
+    has_head_age = any(k.startswith("head_age.") for k in keys)
+
+    # if weights use age_head.* but model expects head_age.*
+    if has_age_head and not has_head_age:
+        sd = {
+            (k.replace("age_head.", "head_age.", 1) if k.startswith("age_head.")
+             else k.replace("gender_head.", "head_gender.", 1) if k.startswith("gender_head.")
+             else k): v
+            for k, v in sd.items()
+        }
+
+    keys = set(sd.keys())
+    has_age_head = any(k.startswith("age_head.") for k in keys)
+    has_head_age = any(k.startswith("head_age.") for k in keys)
+
+    # if weights use head_age.* but model expects age_head.*
+    if has_head_age and not has_age_head:
+        sd = {
+            (k.replace("head_age.", "age_head.", 1) if k.startswith("head_age.")
+             else k.replace("head_gender.", "gender_head.", 1) if k.startswith("head_gender.")
+             else k): v
+            for k, v in sd.items()
+        }
+
     model.load_state_dict(sd, strict=True)
+
+
+def gender_label_from_softmax_idx(gender_idx: int) -> str:
+    """
+    UTKFace convention:
+    0 = male, 1 = female
+    """
+    return "female" if int(gender_idx) == 1 else "male"
 
 
 # -------- Models --------
@@ -238,82 +344,164 @@ class AgeGenderBinsResNet(nn.Module):
         in_features = b.fc.in_features
         b.fc = nn.Identity()
         self.backbone = b
-        self.head_age = nn.Linear(in_features, num_age_bins)
-        self.head_gender = nn.Linear(in_features, 2)
+        self.age_head = nn.Linear(in_features, num_age_bins)
+        self.gender_head = nn.Linear(in_features, 2)
 
     def forward(self, x):
         feats = self.backbone(x)
-        return self.head_age(feats), self.head_gender(feats)
+        return self.age_head(feats), self.gender_head(feats)
 
 
-class AgeGenderRegResNet(nn.Module):
+# --- LEGACY models (2-class gender) ---
+class AgeGenderRegResNetLegacy(nn.Module):
     def __init__(self):
         super().__init__()
         b = torchvision_models.resnet18(weights=None)
         in_features = b.fc.in_features
         b.fc = nn.Identity()
         self.backbone = b
-        self.head_age = nn.Linear(in_features, 1)
-        self.head_gender = nn.Linear(in_features, 2)
+        self.age_head = nn.Linear(in_features, 1)
+        self.gender_head = nn.Linear(in_features, 2)
 
     def forward(self, x):
         feats = self.backbone(x)
-        age = self.head_age(feats).squeeze(1)
-        gender_logits = self.head_gender(feats)
+        age = self.age_head(feats).squeeze(1)
+        gender_logits = self.gender_head(feats)
         return age, gender_logits
 
 
-class AgeGenderDLDLResNet50(nn.Module):
+class AgeGenderDLDLResNet50Legacy(nn.Module):
     def __init__(self):
         super().__init__()
         b = torchvision_models.resnet50(weights=None)
         in_features = b.fc.in_features
         b.fc = nn.Identity()
         self.backbone = b
-        self.head_age = nn.Linear(in_features, NUM_AGES_DLDL)  # 121
-        self.head_gender = nn.Linear(in_features, 2)
+        self.age_head = nn.Linear(in_features, NUM_AGES_DLDL)
+        self.gender_head = nn.Linear(in_features, 2)
 
     def forward(self, x):
         feats = self.backbone(x)
-        return self.head_age(feats), self.head_gender(feats)
+        return self.age_head(feats), self.gender_head(feats)
+
+
+# --- V2 models (gender = 1 logit BCE) ---
+class AgeGenderRegResNetV2(nn.Module):
+    def __init__(self):
+        super().__init__()
+        b = torchvision_models.resnet18(weights=None)
+        in_features = b.fc.in_features
+        b.fc = nn.Identity()
+        self.backbone = b
+        self.age_head = nn.Linear(in_features, 1)     # years
+        self.gender_head = nn.Linear(in_features, 1)  # logit (class=1 means FEMALE in UTKFace)
+
+    def forward(self, x):
+        feats = self.backbone(x)
+        age = self.age_head(feats).squeeze(1)
+        gender_logit = self.gender_head(feats).squeeze(1)
+        return age, gender_logit
+
+
+class AgeGenderDLDLResNet50V2(nn.Module):
+    def __init__(self):
+        super().__init__()
+        b = torchvision_models.resnet50(weights=None)
+        in_features = b.fc.in_features
+        b.fc = nn.Identity()
+        self.backbone = b
+        self.age_head = nn.Linear(in_features, NUM_AGES_DLDL)  # 121
+        self.gender_head = nn.Linear(in_features, 1)           # logit (class=1 means FEMALE in UTKFace)
+
+    def forward(self, x):
+        feats = self.backbone(x)
+        age_logits = self.age_head(feats)
+        gender_logit = self.gender_head(feats).squeeze(1)
+        return age_logits, gender_logit
 
 
 def load_age_gender_dldl():
-    global age_gender_dldl_model, age_gender_dldl_status
+    global age_gender_dldl_model, age_gender_dldl_status, age_gender_dldl_is_v2
+    age_gender_dldl_is_v2 = False
+
     if not torch_ok:
         age_gender_dldl_status = LoadStatus(False, f"torch not available: {torch_error}", AGE_GENDER_DLDL_WEIGHTS_PATH)
         return
     if not os.path.isfile(AGE_GENDER_DLDL_WEIGHTS_PATH):
         age_gender_dldl_status = LoadStatus(False, "weights file not found", AGE_GENDER_DLDL_WEIGHTS_PATH)
         return
+
     try:
-        m = AgeGenderDLDLResNet50().to("cpu")
         sd = torch.load(AGE_GENDER_DLDL_WEIGHTS_PATH, map_location="cpu")
+    except Exception as e:
+        age_gender_dldl_status = LoadStatus(False, f"load error: {repr(e)}", AGE_GENDER_DLDL_WEIGHTS_PATH)
+        return
+
+    # try v2 first
+    try:
+        m = AgeGenderDLDLResNet50V2().to("cpu")
         safe_load_state_dict(m, sd)
         m.eval()
         m.to(DEVICE)
         age_gender_dldl_model = m
-        age_gender_dldl_status = LoadStatus(True, "loaded", AGE_GENDER_DLDL_WEIGHTS_PATH)
+        age_gender_dldl_is_v2 = True
+        age_gender_dldl_status = LoadStatus(True, "loaded (v2)", AGE_GENDER_DLDL_WEIGHTS_PATH)
+        return
+    except Exception:
+        pass
+
+    # fallback legacy
+    try:
+        m = AgeGenderDLDLResNet50Legacy().to("cpu")
+        safe_load_state_dict(m, sd)
+        m.eval()
+        m.to(DEVICE)
+        age_gender_dldl_model = m
+        age_gender_dldl_is_v2 = False
+        age_gender_dldl_status = LoadStatus(True, "loaded (legacy)", AGE_GENDER_DLDL_WEIGHTS_PATH)
     except Exception as e:
         age_gender_dldl_status = LoadStatus(False, f"load error: {repr(e)}", AGE_GENDER_DLDL_WEIGHTS_PATH)
 
 
 def load_age_gender_reg():
-    global age_gender_reg_model, age_gender_reg_status
+    global age_gender_reg_model, age_gender_reg_status, age_gender_reg_is_v2
+    age_gender_reg_is_v2 = False
+
     if not torch_ok:
         age_gender_reg_status = LoadStatus(False, f"torch not available: {torch_error}", AGE_GENDER_REG_WEIGHTS_PATH)
         return
     if not os.path.isfile(AGE_GENDER_REG_WEIGHTS_PATH):
         age_gender_reg_status = LoadStatus(False, "weights file not found", AGE_GENDER_REG_WEIGHTS_PATH)
         return
+
     try:
-        m = AgeGenderRegResNet().to("cpu")
         sd = torch.load(AGE_GENDER_REG_WEIGHTS_PATH, map_location="cpu")
+    except Exception as e:
+        age_gender_reg_status = LoadStatus(False, f"load error: {repr(e)}", AGE_GENDER_REG_WEIGHTS_PATH)
+        return
+
+    # try v2 first
+    try:
+        m = AgeGenderRegResNetV2().to("cpu")
         safe_load_state_dict(m, sd)
         m.eval()
         m.to(DEVICE)
         age_gender_reg_model = m
-        age_gender_reg_status = LoadStatus(True, "loaded", AGE_GENDER_REG_WEIGHTS_PATH)
+        age_gender_reg_is_v2 = True
+        age_gender_reg_status = LoadStatus(True, "loaded (v2)", AGE_GENDER_REG_WEIGHTS_PATH)
+        return
+    except Exception:
+        pass
+
+    # fallback legacy
+    try:
+        m = AgeGenderRegResNetLegacy().to("cpu")
+        safe_load_state_dict(m, sd)
+        m.eval()
+        m.to(DEVICE)
+        age_gender_reg_model = m
+        age_gender_reg_is_v2 = False
+        age_gender_reg_status = LoadStatus(True, "loaded (legacy)", AGE_GENDER_REG_WEIGHTS_PATH)
     except Exception as e:
         age_gender_reg_status = LoadStatus(False, f"load error: {repr(e)}", AGE_GENDER_REG_WEIGHTS_PATH)
 
@@ -360,29 +548,35 @@ def infer_age_gender_dldl(face_pil: Image.Image) -> Optional[Dict[str, Any]]:
 
     x = preprocess_for_resnet(face_pil)
     with torch.no_grad():
-        age_logits, gender_logits = age_gender_dldl_model(x)
+        age_logits, gender_out = age_gender_dldl_model(x)
         age_probs = F.softmax(age_logits, dim=1)[0].cpu().numpy().tolist()
-        gender_probs = F.softmax(gender_logits, dim=1)[0].cpu().numpy().tolist()
 
-    # expected age
+        # gender_out: либо (2 classes) либо (1 logit)
+        if age_gender_dldl_is_v2:
+            # ✅ FIX: sigmoid(logit) = P(class==1) = P(FEMALE) (UTKFace: 1=female)
+            p_female = float(torch.sigmoid(gender_out)[0].item())
+            gender_label = "female" if p_female >= 0.5 else "male"
+            gender_prob = p_female if gender_label == "female" else 1.0 - p_female
+        else:
+            gender_probs = F.softmax(gender_out, dim=1)[0].cpu().numpy().tolist()
+            gender_idx = int(max(range(len(gender_probs)), key=lambda i: gender_probs[i]))
+            gender_label = gender_label_from_softmax_idx(gender_idx)
+            gender_prob = float(gender_probs[gender_idx])
+
     age_est = float(sum(p * i for i, p in enumerate(age_probs)))
     age_est = max(0.0, min(120.0, age_est))
 
-    # bin + bin probability mass
     bin_label = age_to_bin_label(age_est)
     bin_idx = AGE_BIN_LABELS.index(bin_label)
     lo, hi = AGE_BINS[bin_idx]
     bin_prob = age_bin_prob_from_probs(age_probs, lo, hi)
-
-    gender_idx = int(max(range(len(gender_probs)), key=lambda i: gender_probs[i]))
-    gender_label = "male" if gender_idx == 0 else "female"  # UTKFace mapping
 
     return {
         "age_bin": bin_label,
         "age_bin_prob": float(bin_prob),
         "age_est": float(age_est),
         "gender": gender_label,
-        "gender_prob": float(gender_probs[gender_idx]),
+        "gender_prob": float(gender_prob),
         "mode": "dldl",
     }
 
@@ -390,23 +584,34 @@ def infer_age_gender_dldl(face_pil: Image.Image) -> Optional[Dict[str, Any]]:
 def infer_age_gender_reg(face_pil: Image.Image) -> Optional[Dict[str, Any]]:
     if not age_gender_reg_status.ready or age_gender_reg_model is None:
         return None
+
     x = preprocess_for_resnet(face_pil)
     with torch.no_grad():
-        age_norm, gender_logits = age_gender_reg_model(x)
-        gender_probs = F.softmax(gender_logits, dim=1)[0].cpu().numpy().tolist()
+        age_out, gender_out = age_gender_reg_model(x)
 
-    age_est = float(age_norm.item() * MAX_AGE_FOR_REG)
-    age_est = max(0.0, min(120.0, age_est))
+        if age_gender_reg_is_v2:
+            age_est = float(age_out[0].item())
+            age_est = max(0.0, min(120.0, age_est))
 
-    gender_idx = int(max(range(len(gender_probs)), key=lambda i: gender_probs[i]))
-    gender_label = "male" if gender_idx == 0 else "female"
+            # ✅ FIX: sigmoid(logit) = P(class==1) = P(FEMALE) (UTKFace: 1=female)
+            p_female = float(torch.sigmoid(gender_out)[0].item())
+            gender_label = "female" if p_female >= 0.5 else "male"
+            gender_prob = p_female if gender_label == "female" else 1.0 - p_female
+        else:
+            age_est = float(age_out[0].item() * MAX_AGE_FOR_REG)
+            age_est = max(0.0, min(120.0, age_est))
+
+            gender_probs = F.softmax(gender_out, dim=1)[0].cpu().numpy().tolist()
+            gender_idx = int(max(range(len(gender_probs)), key=lambda i: gender_probs[i]))
+            gender_label = gender_label_from_softmax_idx(gender_idx)
+            gender_prob = float(gender_probs[gender_idx])
 
     return {
         "age_bin": age_to_bin_label(age_est),
         "age_bin_prob": 1.0,
         "age_est": float(age_est),
         "gender": gender_label,
-        "gender_prob": float(gender_probs[gender_idx]),
+        "gender_prob": float(gender_prob),
         "mode": "regression",
     }
 
@@ -422,10 +627,9 @@ def infer_age_gender_bins(face_pil: Image.Image) -> Optional[Dict[str, Any]]:
 
     age_idx = int(max(range(len(age_probs)), key=lambda i: age_probs[i]))
     gender_idx = int(max(range(len(gender_probs)), key=lambda i: gender_probs[i]))
-    gender_label = "male" if gender_idx == 0 else "female"
+    gender_label = gender_label_from_softmax_idx(gender_idx)
 
-    # expected age using bin centers
-    centers = [ (a + b) / 2 for (a, b) in AGE_BINS ]
+    centers = [(a + b) / 2 for (a, b) in AGE_BINS]
     age_est = float(sum(p * c for p, c in zip(age_probs, centers)))
 
     return {
@@ -458,17 +662,19 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+
 def init_models():
     init_face_detector()
     load_emotion_model()
-    # priority order
     load_age_gender_dldl()
     load_age_gender_reg()
     load_age_gender_bins()
 
+
 @app.on_event("startup")
 def _startup():
     init_models()
+
 
 @app.get("/health")
 def health():
@@ -489,6 +695,7 @@ def health():
         "age_gender_regression": {"ready": age_gender_reg_status.ready, "message": age_gender_reg_status.message, "path": age_gender_reg_status.path},
         "age_gender_bins": {"ready": age_gender_bins_status.ready, "message": age_gender_bins_status.message, "path": age_gender_bins_status.path},
     }
+
 
 @app.post("/infer")
 async def infer(
@@ -512,9 +719,7 @@ async def infer(
         emo = infer_emotion(face_pil)
         ag = infer_age_gender(face_pil)
 
-        results.append(
-            {"bbox": bbox, "score": f.get("score", 0.0), "emotion": emo, "age_gender": ag}
-        )
+        results.append({"bbox": bbox, "score": f.get("score", 0.0), "emotion": emo, "age_gender": ag})
 
     return {
         "ok": True,

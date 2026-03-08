@@ -1,0 +1,1 @@
+epoch,train_loss,val_loss,test_loss,train_acc,val_acc,test_acc,train_f1_macro,val_f1_macro,test_f1_macro,lr,mix_p

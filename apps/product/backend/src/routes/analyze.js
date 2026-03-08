@@ -48,6 +48,85 @@ function makeUploader(uploadsDir) {
   });
 }
 
+function extFromContentType(ct) {
+  const t = String(ct || '').toLowerCase();
+  if (t.includes('image/jpeg')) return '.jpg';
+  if (t.includes('image/png')) return '.png';
+  if (t.includes('image/webp')) return '.webp';
+  return '';
+}
+
+function looksLikeImageUrl(url) {
+  return /\.(jpg|jpeg|png|webp)(\?|$)/i.test(String(url || ''));
+}
+
+async function downloadUrlToFile(inputUrl, outPath) {
+  // ВАЖНО: VK CDN иногда режет “ботов”. Эти заголовки помогают.
+  const resp = await axios.get(inputUrl, {
+    responseType: 'stream',
+    timeout: 30000,
+    maxRedirects: 5,
+    validateStatus: () => true,
+    headers: {
+      'User-Agent':
+        'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36',
+      Accept: 'image/avif,image/webp,image/apng,image/*,*/*;q=0.8',
+      Referer: 'https://vk.com/',
+    },
+  });
+
+  if (resp.status < 200 || resp.status >= 300) {
+    const ct = String(resp.headers['content-type'] || '');
+    throw new Error(`Download failed: HTTP ${resp.status} (content-type: ${ct || 'unknown'})`);
+  }
+
+  // Пытаемся понять, что это не HTML
+  const contentType = String(resp.headers['content-type'] || '').toLowerCase();
+  const isHtml = contentType.includes('text/html') || contentType.includes('text/plain');
+  if (contentType && isHtml && !looksLikeImageUrl(inputUrl)) {
+    throw new Error(`URL returned non-image content-type: ${contentType}`);
+  }
+
+  await new Promise((resolve, reject) => {
+    const ws = fs.createWriteStream(outPath);
+    resp.data.pipe(ws);
+    ws.on('finish', resolve);
+    ws.on('error', reject);
+  });
+
+  return { contentType };
+}
+
+async function inferWithMl(mlBase, filePath, originalName, mimetype) {
+  const mlUrl = `${mlBase.replace(/\/$/, '')}/infer`;
+
+  const form = new FormData();
+  form.append('image', fs.createReadStream(filePath), {
+    filename: originalName || path.basename(filePath),
+    contentType: mimetype || 'application/octet-stream',
+  });
+
+  const mlResp = await axios.post(mlUrl, form, {
+    headers: form.getHeaders(),
+    timeout: 120000,
+    maxBodyLength: Infinity,
+    maxContentLength: Infinity,
+    validateStatus: () => true,
+  });
+
+  if (mlResp.status < 200 || mlResp.status >= 300) {
+    const err = new Error(`ML service error: ${mlResp.status}`);
+    err.details = mlResp.data;
+    err.statusCode = 502;
+    throw err;
+  }
+
+  return mlResp.data;
+}
+
+// ==========================
+// 1) Анализ загруженного файла
+// ==========================
 router.post(
   '/analyze',
   (req, res, next) => {
@@ -68,8 +147,7 @@ router.post(
   },
   async (req, res) => {
     try {
-      const mlBase = process.env.ML_SERVICE_URL || 'http://127.0.0.1:8001';
-      const mlUrl = `${mlBase.replace(/\/$/, '')}/infer`;
+      const mlBase = process.env.ML_SERVICE_URL || req.app.locals.mlServiceUrl || 'http://127.0.0.1:8001';
 
       const files = req.files || {};
       const picked = (files.image && files.image[0]) || (files.file && files.file[0]) || null;
@@ -81,29 +159,7 @@ router.post(
         });
       }
 
-      // Forward to ML via multipart
-      const form = new FormData();
-      // ML accepts both "image" and "file"; we always send as "image"
-      form.append('image', fs.createReadStream(picked.path), {
-        filename: picked.originalname || path.basename(picked.path),
-        contentType: picked.mimetype || 'application/octet-stream',
-      });
-
-      const mlResp = await axios.post(mlUrl, form, {
-        headers: form.getHeaders(),
-        timeout: 120000,
-        maxBodyLength: Infinity,
-        maxContentLength: Infinity,
-        validateStatus: () => true,
-      });
-
-      if (mlResp.status < 200 || mlResp.status >= 300) {
-        return res.status(502).json({
-          ok: false,
-          error: `ML service error: ${mlResp.status}`,
-          details: mlResp.data,
-        });
-      }
+      const result = await inferWithMl(mlBase, picked.path, picked.originalname, picked.mimetype);
 
       const imageUrl = buildPublicUrl(req, picked.filename);
 
@@ -117,19 +173,98 @@ router.post(
           size: picked.size,
           url: imageUrl,
         },
-        result: mlResp.data,
+        result,
       };
 
       appendHistoryRecord(req.app.locals.storageDir, record);
 
       return res.json({ ok: true, record });
     } catch (e) {
-      return res.status(500).json({
+      const status = e?.statusCode || 500;
+      return res.status(status).json({
         ok: false,
         error: e?.message || 'Analyze failed',
+        details: e?.details || null,
       });
     }
   }
 );
+
+// ==========================
+// 2) Анализ по ссылке (VK CDN / любой URL)
+// POST /api/analyze_url { url: "https://..." }
+// ==========================
+router.post('/analyze_url', async (req, res) => {
+  try {
+    const mlBase = process.env.ML_SERVICE_URL || req.app.locals.mlServiceUrl || 'http://127.0.0.1:8001';
+    const uploadsDir = req.app.locals.uploadsDir;
+    ensureDir(uploadsDir);
+
+    const inputUrl = String(req.body?.url || req.body?.imageUrl || '').trim();
+    if (!inputUrl) {
+      return res.status(400).json({ ok: false, error: 'Missing "url" in JSON body.' });
+    }
+
+    let urlObj;
+    try {
+      urlObj = new URL(inputUrl);
+    } catch {
+      return res.status(400).json({ ok: false, error: 'Invalid URL.' });
+    }
+
+    // Сгенерим имя файла. Расширение: либо по content-type, либо из URL.
+    const baseNameFromUrl = path.basename(urlObj.pathname || 'image');
+    let tmpName = makeFilename(baseNameFromUrl);
+    let outPath = path.join(uploadsDir, tmpName);
+
+    // Скачиваем
+    const { contentType } = await downloadUrlToFile(inputUrl, outPath);
+
+    // Если content-type дал лучшее расширение — переименуем файл
+    const extByCt = extFromContentType(contentType);
+    if (extByCt && path.extname(outPath).toLowerCase() !== extByCt) {
+      const renamed = outPath.replace(path.extname(outPath), extByCt);
+      fs.renameSync(outPath, renamed);
+      outPath = renamed;
+      tmpName = path.basename(outPath);
+    }
+
+    // Минимальная проверка: файл реально не пустой
+    const st = fs.statSync(outPath);
+    if (!st.size || st.size < 20) {
+      throw new Error('Downloaded file looks empty.');
+    }
+
+    // Инференс
+    const result = await inferWithMl(mlBase, outPath, baseNameFromUrl, contentType || 'application/octet-stream');
+
+    const imageUrl = buildPublicUrl(req, tmpName);
+
+    const record = {
+      id: crypto.randomBytes(10).toString('hex'),
+      createdAt: new Date().toISOString(),
+      image: {
+        filename: tmpName,
+        originalname: baseNameFromUrl,
+        mimetype: contentType || 'application/octet-stream',
+        size: st.size,
+        url: imageUrl,
+        sourceUrl: inputUrl,
+      },
+      result,
+    };
+
+    appendHistoryRecord(req.app.locals.storageDir, record);
+
+    return res.json({ ok: true, record });
+  } catch (e) {
+    const status = e?.statusCode || 500;
+    return res.status(status).json({
+      ok: false,
+      error: e?.message || 'Analyze URL failed',
+      details: e?.details || null,
+    });
+  }
+});
 
 module.exports = router;
